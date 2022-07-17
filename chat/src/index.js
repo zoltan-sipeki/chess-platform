@@ -9,6 +9,10 @@ initServer();
 const app = Express();
 const appWS = ExpressWS(app);
 
+app.use((req, res, next) => {
+    req.url = req.url.replace(/^\/chat/, "/");
+    next();
+});
 app.use(Express.json());
 app.use(redisSession);
 
@@ -18,6 +22,10 @@ app.ws("/", (socket, req) => {
         return;
     }
     onConnect(socket, req.session.userID);
+});
+
+app.get("/hch", (req, res) => {
+    res.sendStatus(200);
 });
 
 app.listen(process.env.CHAT_PORT, () => console.log(`Chat server listening on port ${process.env.CHAT_PORT}.`));

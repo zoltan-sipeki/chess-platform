@@ -9,6 +9,10 @@ initServer();
 const app = Express();
 const appWS = ExpressWS(app);
 
+app.use((req, res, next) => {
+    req.url = req.url.replace(/^\/chess/, "/");
+    next();
+});
 app.use(Express.json());
 app.use(redisSession);
 app.ws("/", (socket, req) => {
@@ -47,5 +51,9 @@ app.get("/matches/:id", async (req, res) => {
     }
 
 });
+
+app.get("/hch", (req, res) => {
+    res.sendStatus(200);
+})
 
 app.listen(process.env.CHESS_PORT, () => console.log(`Game server listening on port ${process.env.CHESS_PORT}.`));
