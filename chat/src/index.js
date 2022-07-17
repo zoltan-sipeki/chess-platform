@@ -10,7 +10,7 @@ const app = Express();
 const appWS = ExpressWS(app);
 
 app.use((req, res, next) => {
-    req.url = req.url.replace(/^\/chat/, "/");
+    req.url = req.url.replace(/^\/chat$|^\/chat\//, "/");
     next();
 });
 app.use(Express.json());

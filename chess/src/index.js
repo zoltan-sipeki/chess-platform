@@ -10,7 +10,7 @@ const app = Express();
 const appWS = ExpressWS(app);
 
 app.use((req, res, next) => {
-    req.url = req.url.replace(/^\/chess/, "/");
+    req.url = req.url.replace(/^\/chess$|^\/chess\//, "/");
     next();
 });
 app.use(Express.json());

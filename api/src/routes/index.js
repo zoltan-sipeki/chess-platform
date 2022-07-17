@@ -6,10 +6,17 @@ import { redisSession } from "../redis-session.js";
 
 const router = Express.Router();
 
+router.use((req, res, next) => {
+    req.url = req.url.replace(/^\/api$|^\/api\//, "/");
+    next();
+});
 router.use(Express.json());
 router.use(redisSession);
 router.use("/auth", AuthRouter);
 router.use("/community", CommunityRouter);
 router.use("/chess", ChessRoute);
+router.use("/hch", (req, res) => {
+    res.sendStatus(200);
+});
 
 export { router as default };

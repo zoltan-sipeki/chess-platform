@@ -14,6 +14,10 @@ const BASE_FOLDER = argv[2] === "frontend" ? "../public" : "../data";
 
 const app = Express();
 
+app.get("/hch", (req, res) => {
+    res.sendStatus(200);
+});
+
 app.put(/\/.*/, Express.raw({ type: "image/png", limit: "10mb" }), Express.text({ type: ["application/json", "text/*"] }), async (req, res, next) => {
     const tokens = req.url.split("/");
     const file = tokens[tokens.length - 1];
