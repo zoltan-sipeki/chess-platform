@@ -2,13 +2,12 @@ import Express from "express";
 import Database from "../../../../database.js";
 import FileType from "file-type";
 import { v4 as UUID } from "uuid";
-import FS from "fs/promises";
-import { mypath, writeFile } from "../../../../../../common/utils.mjs";
 import { notifyFriendsOfUpdate } from "../../../middlewares.js";
+import { writeFile, removeFile } from "../../../../utils/file.mjs";
 
 const AVATAR_SIZE_LIMIT = 5242880;
-const PUBLIC_FOLDER = "../../../../../../public";
-const DEFAULT_AVATAR = "/avatars/default.png";
+const AVATARS_FOLDER = "/avatars";
+const DEFAULT_AVATAR = `${AVATARS_FOLDER}/default.png`;;
 
 const router = Express.Router();
 
@@ -28,8 +27,8 @@ async function uploadAvatar(req, res, next) {
         return;
     }
 
-    const avatar = `/avatars/${UUID()}.png`;
-    await writeFile(mypath(import.meta.url, PUBLIC_FOLDER), avatar.substring(1), req.body);
+    const avatar = `${AVATARS_FOLDER}/${UUID()}.png`;
+    await writeFile(avatar, "image/png", req.body, true);
     
     let connection = null;
 
@@ -38,7 +37,7 @@ async function uploadAvatar(req, res, next) {
         const [user] = await connection.query("SELECT avatar FROM users WHERE id = ?", [req.session.userID]);
 
         if (user.avatar !== DEFAULT_AVATAR) {
-            await FS.rm(mypath(import.meta.url, `${PUBLIC_FOLDER}${user.avatar}`));
+            await removeFile(user.avatar, true);
         }
 
         await connection.query("UPDATE users SET avatar = ? WHERE id = ?", [avatar, req.session.userID]);
@@ -59,7 +58,7 @@ async function uploadAvatar(req, res, next) {
 
 
 router.post("/remove", removeAvatar, notifyFriendsOfUpdate, (req, res, next) => {
-    req.json(res.locals.changes)
+    res.json(res.locals.changes)
 });
 
 async function removeAvatar(req, res, next) {
@@ -70,7 +69,7 @@ async function removeAvatar(req, res, next) {
 
         const [user] = await connection.query("SELECT avatar FROM users WHERE id = ?", [req.session.userID]);
         if (user.avatar !== DEFAULT_AVATAR) {
-            await FS.rm(mypath(import.meta.url, `${PUBLIC_FOLDER}${user.avatar}`));
+            await removeFile(user.avatar, true);
             await connection.query("UPDATE users SET avatar = ? WHERE id = ?", [DEFAULT_AVATAR, req.session.userID]);
         }
 

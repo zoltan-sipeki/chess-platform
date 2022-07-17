@@ -1,15 +1,14 @@
 import Express from "express";
 import * as UserCache from "../../utils/user-cache.js";
-import FS from "fs/promises";
-import { mypath } from "../../../../common/utils.mjs";
+import { readFile } from "../../utils/file.mjs";
 
-const REPLAY_PATH = mypath(import.meta.url, `../../../../data/replays`);
+const REPLAY_PATH = "/replays";
 
 const router = Express.Router();
 
 router.get("/:id/replay", async (req, res, next) => {
     try {
-        let replay = await FS.readFile(`${REPLAY_PATH}/${req.params.id}.json`);
+        let replay = await readFile(`${REPLAY_PATH}/${req.params.id}.json`);
         replay = JSON.parse(replay);
 
         const { players } = replay;
@@ -28,7 +27,7 @@ router.get("/:id/replay", async (req, res, next) => {
     }
     catch (err) {
         console.log(err);
-        if (err.code === "ENOENT") {
+        if (err.code === 404) {
             res.sendStatus(404);
         }
         else {

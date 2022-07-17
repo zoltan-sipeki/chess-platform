@@ -2,11 +2,9 @@ import { ServerChessBoard } from "./chess/chessboard/ServerChessBoard.mjs";
 import { DB } from "./database.js";
 import { notifyChatServer } from "./redis.js";
 import { calculateELORating } from "./elo-rating.js";
-import FS from "fs/promises";
-import { mypath } from "../../common/utils.mjs";
 import * as MSG from "./chess-message-types.mjs";
 import { RS_GAME_OVER, RS_GAME_STARTED } from "../../common/redis-sub-constants.mjs";
-import { writeFile } from "../../common/utils.mjs";
+import { writeFile } from "./file.mjs";
 
 export const MATCH = {
     PRIVATE: "private",
@@ -17,7 +15,7 @@ export const MATCH = {
 const LOAD_TIMEOUT = 60000;
 const READY_TIMEOUT = 10000;
 
-const REPLAY_PATH = mypath(import.meta.url, "../../data/replays");
+const REPLAY_PATH = "/replays";
 
 class Room {
     constructor(id, players, onCloseCallback) {
@@ -291,12 +289,11 @@ class Room {
     }
 
     async saveReplay(scoreboard) {
-        await writeFile(REPLAY_PATH, `${this.id}.json`, JSON.stringify({
+        await writeFile(`${REPLAY_PATH}/${this.id}`, "application/json", JSON.stringify({
             players: this.players.map(player => ({ id: player.id, color: player.color })),
             scoreboard,
             moves: this.chessboard.moves
         }));
-
         this.sendToAll({ type: MSG.S_REPLAY_READY, data: { replayId: this.id } });
     }
 }

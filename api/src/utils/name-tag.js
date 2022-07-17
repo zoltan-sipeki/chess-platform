@@ -1,21 +1,19 @@
-import FS from "fs/promises";
-import { mypath } from "../../../common/utils.mjs";
-import { writeFile } from "../../../common/utils.mjs";
+import { writeFile, readFile } from "./file.mjs";
 
-const PROFILE_NAMES_FOLDER = mypath(import.meta.url, "../../../data/profile-names");
+const PROFILE_NAMES_FOLDER = "/profile-names";
 
 export async function hasTags(profileName) {
     const path = `${PROFILE_NAMES_FOLDER}/${profileName.toLowerCase()}.json`;
     let content = null;
 
     try {
-        content = await FS.readFile(path, { encoding: "utf8" });
+        content = await readFile(path);
         content = JSON.parse(content);
 
         return content.tags.length > 0;
     }
     catch (err) {
-        if (err.code === "ENOENT") {
+        if (err.code === 404) {
             return true;
         }
         
@@ -29,11 +27,11 @@ export async function generateTag(profileName) {
     let content = null;
     
     try {
-        content = await FS.readFile(path, { encoding: "utf8" });
+        content = await readFile(path);
         content = JSON.parse(content);
     }
     catch (err) {
-        if (err.code === "ENOENT") {
+        if (err.code === 404) {
             content = generateNumbers();
         }
         else {
@@ -47,7 +45,7 @@ export async function generateTag(profileName) {
     
     const tag = pickNumber(content.tags);
     
-    await writeFile(PROFILE_NAMES_FOLDER, fileName, JSON.stringify(content));
+    await writeFile(path, "application/json", JSON.stringify(content));
     
     return tag;
 }
@@ -57,10 +55,10 @@ export async function returnOldTagToPool(profileName, tag) {
     const path = `${PROFILE_NAMES_FOLDER}/${fileName}`;
     
     try {
-        let content = await FS.readFile(path, { encoding: "utf8" });
+        let content = await readFile(path);
         content = JSON.parse(content);
         content.tags.push(tag);
-        await writeFile(PROFILE_NAMES_FOLDER, fileName, JSON.stringify(content));
+        await writeFile(path, "application/json", JSON.stringify(content));
     }
     catch (err) {
         throw err;
