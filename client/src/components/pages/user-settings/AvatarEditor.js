@@ -355,7 +355,6 @@ class AvatarEditor extends Component {
             }
         }
         catch (e) {
-            console.log(e);
             if (e.name === "AbortError") {
                 return;
             }

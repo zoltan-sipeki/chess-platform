@@ -38,7 +38,6 @@ class DeleteForm extends Component {
         this.props.setLoading(false);
         
         if (response.ok) {
-            console.log("success");
             this.props.logout();
         }
         else if (response.status === 401 || response.status === 409) {

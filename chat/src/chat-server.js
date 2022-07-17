@@ -93,8 +93,6 @@ export async function onConnect(socket, userId) {
     }
     user.addSocket(socket);
     sockets.set(socket, user);
-
-    console.log(`${userId} has connected to the server.`);
 }
 
 async function onDisconnect(socket) {

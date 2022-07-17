@@ -65,7 +65,6 @@ export class ProfilePageForm extends Component {
                 this.props.showAlert(<>Now <strong>{this.map[body.profilePage]}</strong> can see your profile page.</>, "success");
             }
             else {
-                console.log(this.state);
                 this.props.showAlert(GENERIC_ERROR, "danger");
             }
         }

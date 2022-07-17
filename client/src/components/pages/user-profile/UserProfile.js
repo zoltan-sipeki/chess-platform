@@ -54,7 +54,6 @@ export class UserProfile extends Component {
 
     handleEventSource = e => {
         const event = JSON.parse(e.data);
-        console.log(event);
         let friendId = "";
         switch (event.type) {
             case SSE.REMOVE_FRIEND:

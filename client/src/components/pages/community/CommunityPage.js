@@ -266,7 +266,6 @@ class CommunityPage extends Component {
 
     handleStatusChange(msg) {
         this.setFriendChanges(msg.data.senderId, msg.data.changes);
-        console.log(msg.data);
     }
 
     setFriendChanges(friendId, changes) {

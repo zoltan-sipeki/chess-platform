@@ -27,7 +27,6 @@ function withPasswordValidation(WrappedComponent) {
         handleSecondPasswordChange = e => {
             const secondPassword = e.target.value;
             const verificationError = verifyPassword(this.state.password, secondPassword);
-            console.log(verificationError);
             this.setState({ secondPassword, verificationError });
         }
 

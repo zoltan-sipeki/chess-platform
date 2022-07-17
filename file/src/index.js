@@ -70,4 +70,4 @@ else {
 }
 
 
-app.listen(3000);
+app.listen(() => console.log(`${argv[2]} server listening on port ${process.env.FILE_SERVER_PORT}`));

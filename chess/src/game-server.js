@@ -31,7 +31,6 @@ export async function onConnect(userId, socket) {
     socket.addEventListener("message", (message) => {
         try {
             const msg = JSON.parse(message.data);
-            console.log(msg);
             handleMessage(msg, socket);
         } catch (err) {
             if (err instanceof SyntaxError) {
@@ -55,8 +54,6 @@ export async function onConnect(userId, socket) {
     }
     player.addSocket(socket);
     sockets.set(socket, player);
-
-    console.log(player.id + " connected to the server");
 }
 
 export function getRoom(roomId) {
@@ -84,7 +81,6 @@ function onDisconnect(socket) {
                 room.onDisconnect(player.id);
                 rooms.delete(player.room);
                 players.delete(player.id);
-                console.log(player.id + " disconnected from the server.");
             }
         }
     }
@@ -117,18 +113,15 @@ function createRoom(players, matchType) {
 
     room.onCreated();
     rooms.set(roomId, room);
-    console.log(`Room:${roomId} created.`);
 }
 
 function onRoomClosing(roomId, roomPlayers) {
     for (const player of roomPlayers) {
         if (player.disconnected) {
-            console.log(player.id + " disconnected from the server.");
             players.delete(player.id);
         }
     }
     rooms.delete(roomId);
-    console.log(`Room:${roomId} closed.`);
 }
 
 function handleMessage(msg, socket) {

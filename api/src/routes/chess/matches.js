@@ -26,12 +26,11 @@ router.get("/:id/replay", async (req, res, next) => {
         res.json(replay);
     }
     catch (err) {
-        console.log(err);
         if (err.code === 404) {
             res.sendStatus(404);
         }
         else {
-            next();
+            next(next);
         }
     }
 });

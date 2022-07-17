@@ -26,7 +26,6 @@ export async function writeFile(path, mimeType, content, frontend = false) {
 export async function readFile(path, binary = false, frontend = false) {
     try {
         const url = frontend ? FRONT_END_URL : STATIC_URL;
-        console.log(`${url}${path}`);
         const response = await fetch(`${url}${path}`);
         if (response.ok) {
             if (binary) {

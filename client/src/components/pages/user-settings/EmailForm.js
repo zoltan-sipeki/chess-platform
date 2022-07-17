@@ -17,7 +17,6 @@ export class EmailForm extends Component {
         const passwordError = this.props.checkIfCurrentPasswordIsEmpty();
 
         if (emailError || passwordError) {
-            console.log(passwordError)
             return;
         }
 

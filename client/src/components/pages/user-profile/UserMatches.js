@@ -111,8 +111,6 @@ class UserMatches extends Component {
         const filterOutcome = this.selectionOutcome.current.value;
         const sortBy = this.selectionSort.current.value;
 
-        console.log(filterColor);
-
         const displayedMatches = this.matches.filter(match => (
             this.filterColor[filterColor](match) &&
             this.filterType[filterType](match) &&
