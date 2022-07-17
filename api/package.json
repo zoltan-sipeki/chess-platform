@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "api": "nodemon ./src/index.js"
+    "api": "nohup node ./src/index.js >> log.txt 2>> errors.txt &",
+    "api-dev": "nodemon ./src/index.js"
   },
   "keywords": [],
   "author": "",

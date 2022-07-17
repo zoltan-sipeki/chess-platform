@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "chess": "nodemon ./src/index.js"
+    "chess": "nohup node ./src/index.js >> log.txt 2>> errors.txt &",
+    "chess-dev": "nodemon ./src/index.js"
   },
   "keywords": [],
   "author": "",

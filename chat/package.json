@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "chat": "nodemon ./src/index.js"
+    "chat": "nohup node ./src/index.js >> log.txt 2>> errors.txt &",
+    "chat-dev": "nodemon ./src/index.js"
   },
   "keywords": [],
   "author": "",

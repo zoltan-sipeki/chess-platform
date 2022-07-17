@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "front-end": "nodemon ./src/index.js"
+    "file": "nohup node ./src/index.js >> log.txt 2>> errors.txt &",
+    "file-dev": "nodemon ./src/index.js"
   },
   "keywords": [],
   "author": "",
