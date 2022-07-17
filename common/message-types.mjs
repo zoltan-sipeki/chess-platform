@@ -1,0 +1,9 @@
+export const FRIEND_REQUEST = "friend_request";
+export const FRIEND_REQUEST_ACCEPTED = "friend_request_accepted";
+export const UNFRIEND = "unfriend";
+export const CHANGE = "change";
+export const MESSAGE = "message";
+export const TYPING = "typing";
+export const MESSAGE_SEEN = "message_seen";
+export const NOTIFICATION_SEEN = "notification_seen";
+export const NOTIFICATION_REMOVED = "notification_removed";

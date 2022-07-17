@@ -1,0 +1,240 @@
+:root {
+    --scrollbar-track-color: rgb(240, 240, 240);
+    --scrollbar-thumb-color: rgb(205, 205, 205);
+    --scrollbar-thumb-active-color: rgb(96, 96, 96);
+    --scrollbar-thumn-hover-color: rgb(166, 166, 166);
+}
+
+.chess-piece.enabled:hover {
+    cursor: grab;
+}
+
+.chess-piece.enabled:active {
+    cursor: grabbing;
+}
+
+.board-row:nth-of-type(2n) .board-col:nth-of-type(2n) {
+    background-color: azure;
+}
+
+.board-row:nth-of-type(2n) .board-col:nth-of-type(2n + 1) {
+    background-color: cornflowerblue;
+}
+
+.board-row:nth-of-type(2n + 1) .board-col:nth-of-type(2n) {
+    background-color: cornflowerblue;
+}
+
+.board-row:nth-of-type(2n + 1) .board-col:nth-of-type(2n + 1) {
+    background-color: azure;
+}
+
+.promotion:hover {
+    cursor: pointer;
+    background-color: rgba(108, 117, 125, 0.1);
+}
+
+.promotion:active {
+    background-color: rgba(108, 117, 125, 0.2);
+}
+
+.toast-header:hover {
+    cursor: grab;
+}
+
+.toast-header:active {
+    cursor: grabbing;
+}
+
+.moz-scrollbar {
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.webkit-scrollbar::-webkit-scrollbar {
+    width: 1vh;
+}
+
+.webkit-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+}
+
+.webkit-scrollbar::-webkit-scrollbar-thumb:active {
+    background-color: var(--scrollbar-thumb-active-color);
+}
+
+.webkit-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumn-hover-color);
+}
+
+.webkit-scrollbar::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track-color);
+}
+
+.notification .btn-close {
+    visibility: hidden;
+}
+
+.notification:hover .btn-close {
+    visibility: visible;
+}
+
+.emoji:hover, .emoji-list:hover {
+    cursor: pointer;
+    background-color: rgb(233, 236, 239);
+}
+
+.emoji:active, .emoji-list:active {
+    background-color: rgb(13, 110, 253);
+}
+
+.message .time-stamp {
+    visibility: hidden;
+}
+
+.message:hover .time-stamp {
+    visibility: visible;
+}
+
+.message:hover {
+    background-color: #e9ecef;
+}
+
+canvas:hover {
+    cursor: move;
+}
+
+[contenteditable]:empty:before {
+    content: "Type your message here...";
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+}
+
+.chat-tab .btn-close {
+    visibility: hidden;
+}
+
+.chat-tab:hover .btn-close {
+    visibility: visible;
+}
+
+.tag {
+    visibility: hidden;
+}
+
+.user:hover .tag {
+    visibility: visible;
+}
+
+.dropdown-caret {
+    visibility: hidden;
+}
+
+.dropdown:hover .dropdown-caret {
+    visibility: visible;
+}
+
+.dropdown-menu {
+    display: block;
+}
+
+.fade-in {
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+}
+
+@keyframes fade-in {
+    from {
+        transform: scale(0.95, 0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+}
+
+.fade-in-out {
+    animation-name: fade-in-out;
+    animation-timing-function: ease-in-out;
+    animation-duration: 18s;
+    animation-iteration-count: infinite;
+}
+
+.fade-in-out:nth-of-type(6) {
+    animation-delay: 0s;
+}
+
+.fade-in-out:nth-of-type(5) {
+    animation-delay: 3s;
+}
+
+.fade-in-out:nth-of-type(4) {
+    animation-delay: 6s;
+}
+
+.fade-in-out:nth-of-type(3) {
+    animation-delay: 9s;
+}
+
+.fade-in-out:nth-of-type(2) {
+    animation-delay: 12s;
+}
+
+.fade-in-out:nth-of-type(1) {
+    animation-delay: 15s;
+}
+
+@keyframes fade-in-out {
+    0% {
+        opacity: 1;
+    }
+
+    11% {
+        opacity: 1;
+    }
+
+    16.67% {
+        opacity: 0;
+    }
+
+    94.4% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.glide-in-from-left {
+    animation-name: glide-in-from-left;
+    animation-duration: 1s;
+}
+
+@keyframes glide-in-from-left {
+    from {
+        transform: translate(-500px, 0px);
+    }
+
+    to {
+        transfrom: translate(0px, 0px);
+    }
+}
+
+.glide-in-from-right {
+    animation-name: glide-in-from-right;
+    animation-duration: 1s;
+}
+
+@keyframes glide-in-from-right {
+    from {
+        transform: translate(500px, 0px);
+    }
+
+    to {
+        transfrom: translate(0px, 0px);
+    }
+}
