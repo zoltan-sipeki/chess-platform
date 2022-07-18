@@ -68,7 +68,8 @@ router.get("/", async (req, res, next) => {
 async function getMessageTabs(connection, userId) {
     const messageTabs = await connection.query(`
         SELECT chatroomId, COUNT(chatroomId) AS unread
-        FROM received_messages
+        FROM received_messages rm
+        INNER JOIN messages m ON rm.messageId = m.id
         WHERE userId = ? AND seen = FALSE 
         GROUP BY chatroomId
     `, [userId]);
