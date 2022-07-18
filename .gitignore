@@ -1,11 +1,8 @@
 .*
 !/.gitignore
-/data
-/public
 /chat/node_modules
 /client/node_modules
 /chess/node_modules
 /proxy/node_modules
 /api/node_modules
 /file/node_modules
-/workspace.code-workspace
