@@ -6,7 +6,8 @@ const database = createPool({
     database: "chess_platform",
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    rowsAsArray: false
+    rowsAsArray: false,
+    connectionLimit: 8
 });
 
 export { database as default };
