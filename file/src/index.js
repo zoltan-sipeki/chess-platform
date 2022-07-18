@@ -58,10 +58,9 @@ app.delete(/\/.*/, async (req, res, next) => {
 });
 
 if (argv[2] === "frontend") {
-    const BUILD_FOLDER = mypath(import.meta.url, `${BASE_FOLDER}/build`);
-    app.use(Express.static(BUILD_FOLDER), async (req, res, next) => {
+    app.use(Express.static(BASE_FOLDER), async (req, res, next) => {
         try {
-            const html = await FS.readFile(mypath(import.meta.url, `${BUILD_FOLDER}/index.html`), "utf-8");
+            const html = await FS.readFile(mypath(import.meta.url, `${BASE_FOLDER}/index.html`), "utf-8");
             res.send(html);
         }
         catch (err) {
