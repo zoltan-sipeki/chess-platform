@@ -10,7 +10,10 @@ import * as STATUS from "../../common/user-statuses.mjs";
 const users = new Map();
 const sockets = new Map();
 
-export function initServer() {
+export async function initServer() {
+    await redisSub.connect();
+    console.log("redis subscriber connected");
+    
     redisSub.v4.subscribe(REDIS_SUB.RS_CHESS_STATUS_CHANGE, async message => {
         const msg = JSON.parse(message);
 

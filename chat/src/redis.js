@@ -14,4 +14,3 @@ export const redis = Redis.createClient({
 redis.connect().then(() => console.log("redis connected"));
 
 export const redisSub = redis.duplicate();
-redisSub.connect().then(() => console.log("redis subscriber connected"));

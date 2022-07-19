@@ -14,7 +14,10 @@ const queues = {
     unranked: new UnrankedMMQueue(createRoom)
 };
 
-export function initServer() {
+export async function initServer() {
+    await redisSub.connect();
+    console.log("redis subscriber connected");
+    
     redisSub.v4.subscribe(RS_API_MESSAGES, async message => {
         const msg = JSON.parse(message);
         
