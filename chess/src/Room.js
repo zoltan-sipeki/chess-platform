@@ -289,7 +289,7 @@ class Room {
     }
 
     async saveReplay(scoreboard) {
-        await writeFile(`${REPLAY_PATH}/${this.id}`, "application/json", JSON.stringify({
+        await writeFile(`${REPLAY_PATH}/${this.id}.json`, "application/json", JSON.stringify({
             players: this.players.map(player => ({ id: player.id, color: player.color })),
             scoreboard,
             moves: this.chessboard.moves
