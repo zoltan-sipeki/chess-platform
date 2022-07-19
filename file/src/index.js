@@ -10,7 +10,7 @@ if (argv[2] !== "frontend" && argv[2] !== "static") {
     process.exit(1);
 }
 
-const BASE_FOLDER = argv[2] === "frontend" ? "../public" : "../data";
+const ROOT_FOLDER = argv[2] === "frontend" ? "../public" : "../data";
 
 const app = Express();
 
@@ -28,7 +28,7 @@ app.put(/\/.*/, Express.raw({ type: "image/png", limit: "10mb" }), Express.text(
     }
     
     tokens.pop();
-    const folderPath = mypath(import.meta.url, `${BASE_FOLDER}${tokens.join("/")}`);
+    const folderPath = mypath(import.meta.url, `${ROOT_FOLDER}${tokens.join("/")}`);
     const filePath = `${folderPath}/${file}`;
 
     try {
@@ -49,7 +49,7 @@ app.put(/\/.*/, Express.raw({ type: "image/png", limit: "10mb" }), Express.text(
 
 app.delete(/\/.*/, async (req, res, next) => {
     try {
-        await FS.rm(mypath(import.meta.url, `${BASE_FOLDER}${req.url}`));
+        await FS.rm(mypath(import.meta.url, `${ROOT_FOLDER}${req.url}`));
         res.sendStatus(204);
     }
     catch (err) {
@@ -57,10 +57,12 @@ app.delete(/\/.*/, async (req, res, next) => {
     }
 });
 
+const root = mypath(import.meta.url, ROOT_FOLDER);
+
 if (argv[2] === "frontend") {
-    app.use(Express.static(BASE_FOLDER), async (req, res, next) => {
+    app.use(Express.static(root), async (req, res, next) => {
         try {
-            const html = await FS.readFile(mypath(import.meta.url, `${BASE_FOLDER}/index.html`), "utf-8");
+            const html = await FS.readFile(mypath(import.meta.url, `${ROOT_FOLDER}/index.html`), "utf-8");
             res.send(html);
         }
         catch (err) {
@@ -69,8 +71,8 @@ if (argv[2] === "frontend") {
     });
 }
 else {
-    app.use(Express.static(BASE_FOLDER));
+    app.use(Express.static(root));
 }
 
 
-app.listen(() => console.log(`${argv[2]} server listening on port ${process.env.FILE_SERVER_PORT}`));
+app.listen(process.env.FILE_SERVER_PORT, () => console.log(`${argv[2]} server listening on port ${process.env.FILE_SERVER_PORT}`));
