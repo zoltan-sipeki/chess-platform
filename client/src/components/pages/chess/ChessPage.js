@@ -138,6 +138,7 @@ class Chess extends Component {
         const socket = createChessSocketWorker();
         socket.port.addEventListener("message", this.handleSocket);
         socket.port.start();
+        socket.port.postMessage("socketstate");
         return socket;
     }
 

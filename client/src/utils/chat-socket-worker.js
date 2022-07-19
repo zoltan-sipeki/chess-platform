@@ -4,6 +4,7 @@ const RECONNECT_TIMEOUT = 10 * 1000;
 
 const ports = [];
 let socket = createSocket();
+let reconnectTimeout = -1;
 
 // eslint-disable-next-line no-undef
 // eslint-disable-next-line no-restricted-globals
@@ -13,6 +14,7 @@ self.addEventListener("connect", e => {
 
     port.addEventListener("message", e => {
         if (e.data === "close") {
+            clearTimeout(reconnectTimeout);
             socket.removeEventListener("close", closeHandler);
             socket.close();
             const index = ports.findIndex(p => p === port);
@@ -33,7 +35,6 @@ self.addEventListener("connect", e => {
     socket.addEventListener("message", createSocketMessageCallback(port));
 
     port.start();
-    createSocketMessageCallback(port)();
 });
 
 function createSocket() {
@@ -61,7 +62,7 @@ function closeHandler(e) {
         port.postMessage({ type: "reconnect", data: null });
     }
 
-    setTimeout(() => {
+    reconnectTimeout = setTimeout(() => {
         socket = createSocket();
         for (const port of ports) {
             socket.addEventListener("message", createSocketMessageCallback(port));
