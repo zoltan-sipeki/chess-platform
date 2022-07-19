@@ -124,12 +124,12 @@ class App extends Component {
                             <CommunityPage logout={this.logout} />
                         </PrivateRoute>
                     </Route>
-                    <Route path="/chess/matches/:id/replay">
+                    <Route path="/matches/:id/replay">
                         <PrivateRoute loggedIn={loggedIn}>
                             <ChessReplay />
                         </PrivateRoute>
                     </Route>
-                    <Route path="/chess/matches/:id">
+                    <Route path="/matches/:id">
                         <PrivateRoute loggedIn={loggedIn}>
                             <ChessPage />
                         </PrivateRoute>
