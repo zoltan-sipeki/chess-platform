@@ -30,7 +30,7 @@ CREATE TABLE users (
 	lastPlayed DATETIME,
 	avatar VARCHAR(255) NOT NULL DEFAULT '/avatars/default.png',
 	profilePage VARCHAR(255) DEFAULT 'public',
-	defaultStatus VARCHAR(255) DEFAULT 'Offline',
+	defaultStatus VARCHAR(255) DEFAULT 'Online',
 	status VARCHAR(255) DEFAULT 'Offline',
 	statusText VARCHAR(255) DEFAULT 'Offline',
 	matchIdInProgress VARCHAR(255),
