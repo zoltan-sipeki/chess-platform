@@ -1,6 +1,6 @@
 import Express from "express";
 import Database from "../../../database.js";
-import Mailer from "../../../mailer.js";
+import { sendEmail } from "../../../mailer.js";
 import JWT from "jsonwebtoken";
 import { JWTOptions } from "../../../utils/jwt-options.js";
 import { validateRequestBody } from "../../middlewares.js";
@@ -61,13 +61,7 @@ async function sendVerificationEmail(req, res, next) {
         const link = `http://${process.env.PROXY_HOST}/auth/sign-up/complete?token=${token}`;
         
         const email = signUpEmail(req.body.name, link);
-
-        Mailer.sendMail({
-            from: process.env.SMTP_USER,
-            to: req.body.email,
-            subject: email.subject,
-            html: email.html
-        });
+        sendEmail(req.body.email, email.subject, email.html);
 
         res.sendStatus(204);
     }

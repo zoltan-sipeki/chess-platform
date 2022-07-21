@@ -1,6 +1,6 @@
 import Express from "express";
 import { validateEmail } from "../../../../../../common/validators.mjs";
-import Mailer from "../../../../mailer.js";
+import { sendEmail } from "../../../../mailer.js";
 import Database from "../../../../database.js";
 import { validateRequestBody, validateCurrentPassword } from "../../../middlewares.js";
 import * as Constants from "../../../../../../common/validator-constants.mjs";
@@ -11,7 +11,7 @@ const router = Express.Router();
 router.post("/", validateRequestBody("email", "currentPassword"),
                  validateCurrentPassword,
                  updatEmail,
-                 sendEmail);
+                 sendVerificationEmail);
 
 async function updatEmail(req, res, next) {
     const { email } = req.body;
@@ -48,16 +48,10 @@ async function updatEmail(req, res, next) {
     }
 }
 
-function sendEmail(req, res, next) {        
+function sendVerificationEmail(req, res, next) {        
     const email = changeEmailEmail(res.locals.name, req.body.email);
-
-    Mailer.sendMail({
-        from: process.env.SMTP_USER,
-        to: res.locals.oldEmail,
-        subject: email.subject,
-        html: email.html
-    });
-
+    sendEmail(res.locals.oldEmail, email.subject, email.html);
+    
     res.sendStatus(204);
 }
 

@@ -49,7 +49,7 @@ export function changeEmailEmail(name, newEmail) {
 export function changePasswordEmail(name) {
     return {
         subject: "Your password has been changed",
-        hhtml: `
+        html: `
             <h3>Dear ${name},</h3>
             <p>We would like to let you know that your password has been changed.</p>
             <br>

@@ -6,7 +6,15 @@ const mailer = Nodemailer.createTransport({
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD
-    }
+    },
+    secure: false
 });
 
-export { mailer as default };
+export function sendEmail(to, subject, html) {
+    mailer.sendMail({
+        from: process.env.SMTP_FROM,
+        to,
+        subject,
+        html
+    });
+}

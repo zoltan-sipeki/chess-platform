@@ -2,7 +2,7 @@ import Express from "express";
 import Database from "../../../../database.js";
 import { hashPassword } from "../../../../utils/password.js";
 import { validateCurrentPassword, validatePasswords, validateRequestBody } from "../../../middlewares.js";
-import Mailer from "../../../../mailer.js";
+import { sendEmail } from "../../../../mailer.js";
 import { changePasswordEmail } from "../../../../utils/emails.js";
 
 const router = Express.Router();
@@ -11,7 +11,7 @@ router.post("/", validateRequestBody("password", "secondPassword", "currentPassw
                  validateCurrentPassword, 
                  validatePasswords, 
                  updatePassword,
-                 sendEmail);
+                 sendVerificationEmail);
 
 async function updatePassword(req, res, next) {
     let connection = null;
@@ -36,16 +36,10 @@ async function updatePassword(req, res, next) {
     }
 }
 
-function sendEmail(req, res, next) {
+function sendVerificationEmail(req, res, next) {
     const email = changePasswordEmail(res.locals.name);
-
-    Mailer.sendMail({
-        from: process.env.SMTP_USER,
-        to: res.locals.email,
-        subject: email.subject,
-        html: email.html
-    });
-
+    sendEmail(res.locals.email, email.subject, email.html);
+    
     res.sendStatus(204);
 }
 export { router as default };
