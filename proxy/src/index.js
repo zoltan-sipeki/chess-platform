@@ -1,10 +1,6 @@
 import "./dotenv.js";
 import Express from "express";
 import HttpProxy from "http-proxy";
-import FS from "fs/promises";
-import { mypath } from "../../common/utils.mjs";
-
-const PUBLIC_FOLDER = mypath(import.meta.url, "../../public");
 
 const app = Express();
 const proxy = HttpProxy.createProxyServer();
@@ -13,13 +9,14 @@ app.use("/api", proxyRequest("/api", { host: process.env.API_HOST, port: process
 app.use("/chat", proxyRequest("/chat", { host: process.env.CHAT_HOST, port: process.env.CHAT_PORT }));
 app.use("/chess", proxyRequest("/chess", { host: process.env.CHESS_HOST, port: process.env.CHESS_PORT }));
 
-app.use(Express.static(PUBLIC_FOLDER), async (req, res) => {
-    try {
-        const indexPage = await FS.readFile(`${PUBLIC_FOLDER}/index.html`, "utf-8");        
-        res.send(indexPage);
-    }
-    catch (err) {
-        next(err);
+app.use((req, res) => {
+    if (req.method === "GET") {
+        proxy.web(req, res, {
+            target: {
+                host: process.env.FRONT_END_HOST,
+                port: process.env.FRONT_END_PORT
+            }
+        });
     }
 });
 
