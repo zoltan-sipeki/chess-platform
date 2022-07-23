@@ -3,14 +3,14 @@ import JWT from "jsonwebtoken";
 import { v4 as UUID } from "uuid";
 import Database from "../../../database.js";
 import { hashPassword } from "../../../utils/password.js";
-import { validatePasswords, validateQueryString } from "../../middlewares.js";
+import { validatePasswords, validateQueryString, validateRequestBody } from "../../middlewares.js";
 import { generateTag } from "../../../utils/name-tag.js";
 import { AES128Decrypt } from "../../../utils/encrypt.js";
 import { ERROR_TOO_MANY_NAMES } from "../../../../../common/validator-constants.mjs";
 
 const router = Express.Router();
 
-router.post("/", validateQueryString("token"), validateToken, validatePasswords, insertUserIntoDatabase);
+router.post("/", validateQueryString("token"), validateRequestBody("password", "secondPassword"), validateToken, validatePasswords, insertUserIntoDatabase);
 
 async function validateToken(req, res, next) {
     try {

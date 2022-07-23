@@ -1,12 +1,12 @@
 import Express from "express";
 import Database from "../../../../database.js";
 import * as UserCache from "../../../../utils/user-cache.js";
-import { validateCurrentPassword, logOutUser, notifyFriendsOfRemoval } from "../../../middlewares.js";
+import { validateCurrentPassword, logOutUser, notifyFriendsOfRemoval, validateRequestBody } from "../../../middlewares.js";
 import { returnOldTagToPool } from "../../../../utils/name-tag.js";
 
 const router = Express.Router();
 
-router.post("/", validateCurrentPassword, deleteUser, notifyFriendsOfRemoval, logOutUser, (req, res, next) => {
+router.post("/", validateRequestBody("currentPassword"), validateCurrentPassword, deleteUser, notifyFriendsOfRemoval, logOutUser, (req, res, next) => {
     res.sendStatus(204);
 });
 
@@ -17,11 +17,17 @@ async function deleteUser(req, res, next) {
     try {
         connection = await Database.getConnection();
 
-        const user = connection.query("SELECT name, tag, matchIdInProgress FROM users WHERE id = ?", [userId]);
+        const [user] = await connection.query("SELECT name, tag, matchIdInProgress FROM users WHERE id = ?", [userId]);
         if (user.matchIdInProgress) {
             res.status(409).json({ error: "You can't delete your account while a match is in progress." });
             return;
         }
+
+        await returnOldTagToPool(user.name, user.tag);
+        await UserCache.removeFromChatrooms(userId);
+        await UserCache.remove(userId);
+        res.locals.userDeleted = true;
+        res.locals.friends = await UserCache.get(userId, "friends");
 
         await connection.beginTransaction();
         await connection.query(`
@@ -52,13 +58,6 @@ async function deleteUser(req, res, next) {
         `, [userId]);
         await connection.commit();
 
-        await returnOldTagToPool(user.name, user.tag);
-
-        await UserCache.removeFromChatrooms(userId);
-        await UserCache.remove(userId);
-
-        res.locals.userDeleted = true;
-        res.locals.friends = await UserCache.get(userId, "friends");
         next();
     }
     catch (err) {
