@@ -85,12 +85,10 @@ export async function logOutUser(req, res, next) {
             const userId = req.session.userID;
             await Promise.all([
                 Promise.all(activeSessions.map(session => redis.v4.del(`sess:${session}`))),
-                redis.v4.del(key),
                 redis.v4.publish(RS_API_MESSAGES, JSON.stringify({ type: RS_USER_DELETED, data: { userId }}))
             ]);
         }
         else {
-            await redis.v4.lRem(key, 0, req.session.id);
             req.session.destroy();
         }
 
@@ -142,7 +140,6 @@ export async function notifyFriendsOfRemoval(req, res, next) {
                 friend.write(`data: ${JSON.stringify({ type: SSE.REMOVE_FRIEND, data: { friendId: senderId } })}\n\n`);
             }
         }
-
         next();
     }
     catch (err) {

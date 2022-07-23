@@ -30,13 +30,14 @@ async function validateUserCredentials(req, res, next) {
     }
 }
 
-function logInUser(req, res, next) {
+async function logInUser(req, res, next) {
     req.session.userID = res.locals.userID;
     res.cookie("loggedIn", true, {
         httpOnly: false,
         sameSite: true
     });
-    redis.v4.rPush(`active-sessions:${req.session.userID}`, req.session.id);
+    await redis.v4.set(`sess-user:${req.session.id}`, req.session.userID);
+    await redis.v4.rPush(`active-sessions:${req.session.userID}`, req.session.id);
     res.sendStatus(204);
 }
 

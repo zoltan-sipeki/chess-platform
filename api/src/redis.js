@@ -11,4 +11,6 @@ export const redis = Redis.createClient({
     legacyMode: true 
 });
 
+export const redisSub = redis.duplicate();
+
 redis.connect().then(() => console.log("redis connected"));
