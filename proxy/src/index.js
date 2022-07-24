@@ -5,9 +5,32 @@ import HttpProxy from "http-proxy";
 const app = Express();
 const proxy = HttpProxy.createProxyServer();
 
-app.use("/api", proxyRequest("/api", { host: process.env.API_HOST, port: process.env.API_PORT }));
-app.use("/chat", proxyRequest("/chat", { host: process.env.CHAT_HOST, port: process.env.CHAT_PORT }));
-app.use("/chess", proxyRequest("/chess", { host: process.env.CHESS_HOST, port: process.env.CHESS_PORT }));
+app.use("/api", (req, res) => {
+    proxy.web(req, res, { 
+        target: {
+            host: process.env.API_HOST, 
+            port: process.env.API_PORT
+        }
+    });
+});
+
+app.use("/chat", (req, res) => {
+    proxy.web(req, res, {
+        target: {
+            host: process.env.CHAT_HOST,
+            port: process.env.CHAT_PORT
+        }
+    });
+});
+
+app.use("/chess", (req, res) => {
+    proxy.web(req, res, {
+        target: {
+            host: process.env.CHESS_HOST,
+            port: process.env.CHESS_PORT
+        }
+    });
+});
 
 app.use((req, res) => {
     if (req.method === "GET") {
@@ -24,7 +47,6 @@ const server = app.listen(process.env.PROXY_PORT, () => console.log(`Proxy serve
 
 server.on("upgrade", (req, socket, head) => {
     if (req.url.startsWith("/chat")) {
-        req.url = req.url.replace("/chat", "/");
         proxy.ws(req, socket, head, { 
             target: { 
                 host: process.env.CHAT_HOST, 
@@ -33,7 +55,6 @@ server.on("upgrade", (req, socket, head) => {
         });
     }
     else if (req.url.startsWith("/chess")) {
-        req.url = req.url.replace("/chess", "/");
         proxy.ws(req, socket, head, { 
             target: { 
                 host: process.env.CHESS_HOST, 
@@ -46,13 +67,3 @@ server.on("upgrade", (req, socket, head) => {
         res.end();
     }
 });
-
-
-function proxyRequest(prefix, target) {
-    return (req, res, next) => {
-        if (req.url.startsWith(prefix)) {
-            req.url = req.url.replace(prefix, "/");
-        }
-        proxy.web(req, res, { target });
-    }
-}
