@@ -119,19 +119,19 @@ class App extends Component {
                             <PasswordPage modalMessage={resetPasswordModalMessage} buttonText="Reset password" />
                         </PublicRoute>
                     </Route>
-                    <Route path="/community">
-                        <PrivateRoute loggedIn={loggedIn}>
-                            <CommunityPage logout={this.logout} />
-                        </PrivateRoute>
-                    </Route>
-                    <Route path="/matches/:id/replay">
+                    <Route path="/community/matches/:id/replay">
                         <PrivateRoute loggedIn={loggedIn}>
                             <ChessReplay />
                         </PrivateRoute>
                     </Route>
-                    <Route path="/matches/:id">
+                    <Route path="/community/matches/:id">
                         <PrivateRoute loggedIn={loggedIn}>
                             <ChessPage />
+                        </PrivateRoute>
+                    </Route>
+                    <Route path="/community">
+                        <PrivateRoute loggedIn={loggedIn}>
+                            <CommunityPage logout={this.logout} />
                         </PrivateRoute>
                     </Route>
                     <Route>

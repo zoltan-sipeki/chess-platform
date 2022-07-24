@@ -33,14 +33,14 @@ export const ROUTE_USER_MATCHES = userId =>                                 `/ap
 export const ROUTE_USER_PROFILE = (userId, friendsLimit, matchesLimit) =>   `/api/community/users/${userId}?friends=${friendsLimit}&matches=${matchesLimit}`;
 export const ROUTE_UNFRIEND = friendId =>                                   `/api/community/users/${friendId}/unfriend`;
 
-export const ROUTE_CHESS_MATCH_REPLAY = matchId =>                          `/api/chess/matches/${matchId}/replay`;
-export const ROUTE_LEADERBOARD =                                            "/api/chess/leaderboard";
+export const ROUTE_CHESS_MATCH_REPLAY = matchId =>                          `/api/community/matches/${matchId}/replay`;
+export const ROUTE_LEADERBOARD =                                            "/api/comunity/leaderboard";
 
 export const ROUTE_PASSWORD = (pathname, search) =>                         `/api${pathname}${search}`;
 
 // -- WEBSOCKET ROUTES --
-export const ROUTE_CHAT_SERVER =                                            "ws://load-balancer-1791276754.eu-central-1.elb.amazonaws.com/chat";
-export const ROUTE_CHESS_SERVER =                                           "ws://load-balancer-1791276754.eu-central-1.elb.amazonaws.com/chess";
+export const ROUTE_CHAT_SERVER =                                            "ws://localhost/chat";
+export const ROUTE_CHESS_SERVER =                                           "ws://localhost/chess";
 
 // -- CHESS ROUTES --
 export const ROUTE_CHESS_MATCH = matchId =>                                 `/chess/matches/${matchId}`;
@@ -57,6 +57,6 @@ export const LINK_SEARCH_PAGE = name =>                                     `/co
 export const LINK_MATCHES_PAGE = userId =>                                  `/community/users/${userId}/matches`;
 export const LINK_FRIENDS_PAGE = userId =>                                  `/community/users/${userId}/friends`;
 export const LINK_PROFILE_PAGE = userId =>                                  `/community/users/${userId}`;
-export const LINK_MATCH_REPLAY = matchId =>                                 `/matches/${matchId}/replay`;
-export const LINK_MATCH = matchId =>                                        `/matches/${matchId}`;
+export const LINK_MATCH_REPLAY = matchId =>                                 `/community/matches/${matchId}/replay`;
+export const LINK_MATCH = matchId =>                                        `/community/matches/${matchId}`;
 
