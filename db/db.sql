@@ -34,7 +34,7 @@ CREATE TABLE users (
 	status VARCHAR(255) DEFAULT 'Offline',
 	statusText VARCHAR(255) DEFAULT 'Offline',
 	matchIdInProgress VARCHAR(255),
-	inQueue BOOLEAN NOT NULL DEFAULT FALSE,
+	isInQueue BOOLEAN NOT NULL DEFAULT FALSE,
 	
 	UNIQUE(email),
 	UNIQUE(name, tag),
