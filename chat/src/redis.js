@@ -2,12 +2,12 @@ import Redis from "redis";
 
 export const redis = Redis.createClient({ 
     socket: {
-        tls: true,
+        // tls: true,
         host: process.env.REDIS_HOST, 
         port: process.env_REDIS_PORT 
     },
-    username: process.env.REDIS_USER_CHAT,
-    password: process.env.REDIS_PASSWORD_CHAT,
+    // username: process.env.REDIS_USER_CHAT,
+    // password: process.env.REDIS_PASSWORD_CHAT,
     legacyMode: true 
 });
 

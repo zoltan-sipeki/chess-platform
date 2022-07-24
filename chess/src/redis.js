@@ -3,12 +3,12 @@ import { RS_CHESS_STATUS_CHANGE } from "../../common/redis-sub-constants.mjs";
 
 export const redis = Redis.createClient({ 
     socket: { 
-        tls: true,
+        // tls: true,
         host: process.env.REDIS_HOST, 
         port: process.env.REDIS_PORT 
     }, 
-    username: process.env.REDIS_USER_CHESS,
-    password: process.env.REDIS_PASSWORD_CHESS,
+    // username: process.env.REDIS_USER_CHESS,
+    // password: process.env.REDIS_PASSWORD_CHESS,
     legacyMode: true 
 });
 
