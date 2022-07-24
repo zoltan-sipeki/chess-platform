@@ -32,6 +32,10 @@ app.use("/chess", (req, res) => {
     });
 });
 
+app.get("/hch", (req, res) => {
+    res.sendStatus(200);
+});
+
 app.use((req, res) => {
     if (req.method === "GET") {
         proxy.web(req, res, {
