@@ -13,7 +13,10 @@ class UserMenu extends Component {
     }
 
     signOut = async e => {
-        const response = await fetch(ROUTE_SIGN_OUT);
+        const response = await fetch(ROUTE_SIGN_OUT, {
+            method: "POST"
+        });
+        
         if (response.ok) {
             this.props.logout();
         }
