@@ -272,6 +272,10 @@ class CommunityPage extends Component {
         const friends = this.state.friends.map(friend => {
             if (friend.id === friendId) {
                 Object.assign(friend, changes);
+                const { status } = changes;
+                if (status != null) {
+                    document.dispatchEvent(new CustomEvent("profile_refresh", { detail: { friendId, status }}));
+                }
             }
             return friend;
         });

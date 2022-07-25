@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
+import { US_OFFLINE } from '../../../common/user-statuses.mjs';
 import { LINK_CHAT_WINDOW, ROUTE_USER_FRIEND_REQUESTS } from '../../../utils/routes';
 
 class ButtonGroup extends Component {
@@ -27,7 +28,7 @@ class ButtonGroup extends Component {
     }
 
     render() {
-        const { relation, chatroomId } = this.props;
+        const { relation, chatroomId, status } = this.props;
         const { friendRequestSent } = this.state;
 
         if (relation === "self") {
@@ -43,7 +44,9 @@ class ButtonGroup extends Component {
 
         if (relation === "friend") {
             buttons.push(<Link key={-2} to={LINK_CHAT_WINDOW(chatroomId)} className="btn btn-secondary mb-1">Send message</Link>);
-            buttons.push(<button key={-3} onClick={this.inviteFriendToPlay} className="btn btn-secondary mb-1">Invite to play</button>);
+            if (status !== US_OFFLINE) {
+                buttons.push(<button key={-3} onClick={this.inviteFriendToPlay} className="btn btn-secondary mb-1">Invite to play</button>);
+            }
             buttons.push(<button key={-4} onClick={this.unfriend} className="btn btn-danger mb-1">Unfriend</button>);
         }
 

@@ -71,14 +71,22 @@ export class UserProfile extends Component {
         this.refreshProfile(friendId);
     }
 
-    refreshProfile(friendId) {
+    refreshProfile(event) {
+        const { friendId, status } = event;
         if (friendId !== "" && this.props.match.params.id === friendId) {
-            this.fetchProfile();
+            if (status != null) {
+                const profile = { ...this.state.profile };
+                profile.general.status = status;
+                this.setState({ profile });
+            }
+            else {
+                this.fetchProfile();
+            }
         }
     }
 
     onProfileRefresh = e => {
-        this.refreshProfile(e.detail.friendId);
+        this.refreshProfile(e.detail);
     }
 
     async fetchProfile() {
@@ -140,6 +148,7 @@ export class UserProfile extends Component {
                 <div className="d-md-flex justify-content-evenly align-items-center mb-3">
                     <Avatar src={user.avatar} />
                     <ButtonGroup
+                        status={general.status}
                         relation={relation}
                         userId={user.id}
                         chatroomId={user.chatroomId}

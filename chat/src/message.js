@@ -16,7 +16,7 @@ export async function save(chatroomId, messageId, text, createdAt, senderId) {
             , [chatroomId]);
 
         await connection.batch(
-            `INSERT INTO received_messages(userId messageId, seen) VALUES(?, ?, ?, ?)`
+            `INSERT INTO received_messages(userId, messageId, seen) VALUES(?, ?, ?)`
             , members.map(member => [member.userId, messageId, member.userId === senderId ? 1 : 0]));
 
         await connection.commit();

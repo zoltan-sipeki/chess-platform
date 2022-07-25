@@ -33,7 +33,7 @@ router.get("/:id", isProfileVisible, async (req, res, next) => {
 
         if (res.locals.visible) {
             general = await connection.query(`
-                SELECT u.rankedMMR, u.createdAt, u.lastOnline, u.lastPlayed, l.ranking, l.percentile
+                SELECT u.rankedMMR, u.createdAt, u.lastOnline, u.lastPlayed, l.ranking, l.percentile, u.status
                 FROM users u
                 INNER JOIN leaderboard l ON u.id = l.id
                 WHERE u.id = ?`,

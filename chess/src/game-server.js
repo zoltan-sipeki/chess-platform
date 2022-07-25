@@ -5,6 +5,7 @@ import * as MSG from "./chess-message-types.mjs";
 import { redisSub } from "./redis.js";
 import { v4 as UUID } from "uuid";
 import { RS_API_MESSAGES, RS_USER_DELETED } from "../../common/redis-sub-constants.mjs";
+import { US_AWAY, US_OFFLINE } from "../../common/user-statuses.mjs";
 
 const players = new Map();
 const sockets = new Map();
@@ -170,12 +171,23 @@ function handleExitQueue(player) {
     }
 }
 
-function handleInvite(msg, inviter) {
-    if ("inviteeId" in msg.data) {
-        const invitee = players.get(msg.data.inviteeId);
-        if (invitee && !invitee.isInQueue() && !invitee.isInGame() && !inviter.isInQueue() && !inviter.isInGame()) {
-            createRoom([inviter, invitee], MATCH.PRIVATE);
-        }
+async function handleInvite(msg, inviter) {
+    if (!("inviteeId" in msg.data)) {
+        return;
+    } 
+
+    const invitee = players.get(msg.data.inviteeId);
+    if (invitee == null) {
+        return;
+    }
+    
+    const status = await invitee.get("status");
+    if (status === US_OFFLINE) {
+        return;
+    }
+
+    if (!invitee.isInQueue() && !invitee.isInGame() && !inviter.isInQueue() && !inviter.isInGame()) {
+        createRoom([inviter, invitee], MATCH.PRIVATE);
     }
 }
 
