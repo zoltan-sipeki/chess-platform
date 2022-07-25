@@ -5,6 +5,10 @@ import HttpProxy from "http-proxy";
 const app = Express();
 const proxy = HttpProxy.createProxyServer();
 
+proxy.on("error", err => {
+    console.error(err);
+})
+
 app.use("/api", (req, res) => {
     proxy.web(req, res, { 
         target: {
