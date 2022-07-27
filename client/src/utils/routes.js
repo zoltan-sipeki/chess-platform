@@ -34,13 +34,13 @@ export const ROUTE_USER_PROFILE = (userId, friendsLimit, matchesLimit) =>   `/ap
 export const ROUTE_UNFRIEND = friendId =>                                   `/api/community/users/${friendId}/unfriend`;
 
 export const ROUTE_CHESS_MATCH_REPLAY = matchId =>                          `/api/community/matches/${matchId}/replay`;
-export const ROUTE_LEADERBOARD =                                            "/api/comunity/leaderboard";
+export const ROUTE_LEADERBOARD =                                            "/api/community/leaderboard";
 
 export const ROUTE_PASSWORD = (pathname, search) =>                         `/api${pathname}${search}`;
 
 // -- WEBSOCKET ROUTES --
-export const ROUTE_CHAT_SERVER =                                            "ws://localhost/chat";
-export const ROUTE_CHESS_SERVER =                                           "ws://localhost/chess";
+export const ROUTE_CHAT_SERVER =                                            "ws://chessplatform.net/chat";
+export const ROUTE_CHESS_SERVER =                                           "ws://chessplatform.net/chess";
 
 // -- CHESS ROUTES --
 export const ROUTE_CHESS_MATCH = matchId =>                                 `/chess/matches/${matchId}`;
