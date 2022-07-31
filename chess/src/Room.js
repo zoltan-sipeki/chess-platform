@@ -9,7 +9,7 @@ import { writeFile } from "./file.mjs";
 export const MATCH = {
     PRIVATE: "private",
     RANKED: "ranked",
-    UNRANKDED: "unranked"
+    UNRANKED: "unranked"
 }
 
 const LOAD_TIMEOUT = 60000;
@@ -336,7 +336,7 @@ export class UnrankedRoom extends Room {
         await super.onGameOver(scoreboard);
         const updatedMMRs = await this.calculateMMR(scoreboard);
         await Promise.all(updatedMMRs.map((mmr, index) => this.players[index].set({ urankedMMR: mmr })));
-        this.updateDB(scoreboard, "unrankedMMR", MATCH.UNRANKDED);
+        this.updateDB(scoreboard, "unrankedMMR", MATCH.UNRANKED);
         this.saveReplay(scoreboard);
     }
 }
