@@ -11,7 +11,6 @@ const QUEUE_TIMEOUT = 10000;
 class MMQueue {
     constructor(onMatchFoundCallback) {
         this.queue = new RBTree(Player.compare);
-        this.type = null;
         this.onMatchFoundCallback = onMatchFoundCallback;
     }
 
@@ -20,23 +19,25 @@ class MMQueue {
             return;
         }
 
-        this.onEnqueue(player);
-        player.queue = this.type;
-        player.searchInterval = await this.createSearchInterval(player);
-        this.insert(player);
-        notifyChatServer([player], RS_ENQUEUED);
+        await this.onEnqueue(player);
+        if (this.insert(player)) {
+            notifyChatServer([player], RS_ENQUEUED);
+        }
     }
 
     insert(player) {
         const partner = this.queue.insert(player);
         if (partner != null) {
             this.onMatchFound(player, partner);
-        } else {
-            player.setQueueTimeout(
-                () => this.expandSearch(player),
-                QUEUE_TIMEOUT
-            );
+            return false;
         }
+        
+        player.setQueueTimeout(
+            () => this.expandSearch(player),
+            QUEUE_TIMEOUT
+        );
+
+        return true;
     }
 
     dequeue(player) {
@@ -53,10 +54,6 @@ class MMQueue {
         this.insert(player);
     }
 
-    async createSearchInterval(player) {
-        return null;
-    }
-
     onMatchFound(player, partner) {
         player.queue = null;
         player.searchInterval = null;
@@ -64,17 +61,12 @@ class MMQueue {
         this.dequeue(partner);
     }
 
-    onEnqueue(player) { }
+    async onEnqueue(player) { }
 }
 
 export class RankedMMQueue extends MMQueue {
     constructor(onMatchFoundCallback) {
         super(onMatchFoundCallback);
-        this.type = "ranked";
-    }
-
-    async createSearchInterval(player) {
-        return new Interval(await player.get("rankedMMR"));
     }
 
     onMatchFound(player, partner) {
@@ -82,7 +74,9 @@ export class RankedMMQueue extends MMQueue {
         this.onMatchFoundCallback([player, partner], MATCH.RANKED);
     }
 
-    onEnqueue(player) {
+    async onEnqueue(player) {
+        player.queue = MATCH.RANKED;
+        player.searchInterval = new Interval(await player.get("rankedMMR")); 
         player.send({ type: MSG.S_QUEUE, data: { type: "Ranked" } });
     }
 }
@@ -90,11 +84,6 @@ export class RankedMMQueue extends MMQueue {
 export class UnrankedMMQueue extends MMQueue {
     constructor(onMatchFoundCallback) {
         super(onMatchFoundCallback);
-        this.type = "unranked";
-    }
-
-    async createSearchInterval(player) {
-        return new Interval(await player.get("unrankedMMR"));
     }
 
     onMatchFound(player, partner) {
@@ -102,7 +91,9 @@ export class UnrankedMMQueue extends MMQueue {
         this.onMatchFoundCallback([player, partner], MATCH.UNRANKED);
     }
 
-    onEnqueue(player) {
+    async onEnqueue(player) {
+        player.queue = MATCH.UNRANKED;
+        player.searchInterval = new Interval(await player.get("unrankedMMR")); 
         player.send({ type: MSG.S_QUEUE, data: { type: "Unranked" } });
     }
 }
