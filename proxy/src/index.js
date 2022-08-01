@@ -70,8 +70,4 @@ server.on("upgrade", (req, socket, head) => {
             } 
         });
     }
-    else {
-        res.statusCode = 404;
-        res.end();
-    }
 });
