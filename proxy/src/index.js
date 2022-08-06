@@ -4,13 +4,22 @@ import HttpProxy from "http-proxy";
 import HTTP from "http";
 import HTTPS from "https";
 import FS from "fs";
+import Helmet from "helmet";
 
 const app = Express();
 const proxy = HttpProxy.createProxyServer();
 
 proxy.on("error", err => {
     console.error(err);
-})
+});
+
+app.use(Helmet({
+    contentSecurityPolicy: {
+        directives: {
+            imgSrc: ["'self'", "data:", "blob:"]
+        }
+    }
+}));
 
 app.use("/api", (req, res) => {
     proxy.web(req, res, { 
@@ -74,19 +83,19 @@ https.listen(process.env.PROXY_HTTPS_PORT, () => console.log(`Proxy server liste
 
 function setupWSConnections(req, socket, head) {
     if (req.url.startsWith("/chat")) {
-        proxy.ws(req, socket, head, { 
-            target: { 
-                host: process.env.CHAT_HOST, 
-                port: process.env.CHAT_PORT 
-            } 
+        proxy.ws(req, socket, head, {
+            target: {
+                host: process.env.CHAT_HOST,
+                port: process.env.CHAT_PORT
+            }
         });
     }
     else if (req.url.startsWith("/chess")) {
-        proxy.ws(req, socket, head, { 
-            target: { 
-                host: process.env.CHESS_HOST, 
-                port: process.env.CHESS_PORT 
-            } 
+        proxy.ws(req, socket, head, {
+            target: {
+                host: process.env.CHESS_HOST,
+                port: process.env.CHESS_PORT
+            }
         });
     }
 }

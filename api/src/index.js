@@ -4,6 +4,8 @@ import Routes from "./routes/index.js";
 
 const app = Express();
 
+app.disable("x-powered-by");
+
 app.locals.sse = new Map();
 
 app.use("/", Routes);

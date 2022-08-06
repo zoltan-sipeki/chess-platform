@@ -14,6 +14,8 @@ const ROOT_FOLDER = argv[2] === "frontend" ? "../public" : "../data";
 
 const app = Express();
 
+app.disable("x-powered-by");
+
 app.get("/hch", (req, res) => {
     res.sendStatus(200);
 });
