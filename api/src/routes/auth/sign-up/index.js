@@ -58,7 +58,7 @@ async function sendVerificationEmail(req, res, next) {
         const emailEncrypted = AES128Encrypt(req.body.email);
         const token = JWT.sign({ name: req.body.name, email: emailEncrypted }, process.env.JWT_SECRET_KEY, JWTOptions);
 
-        const link = `http://${process.env.PROXY_HOST}/auth/sign-up/complete?token=${token}`;
+        const link = `${req.protocol}://${process.env.PROXY_HOST}/auth/sign-up/complete?token=${token}`;
         
         const email = signUpEmail(req.body.name, link);
         sendEmail(req.body.email, email.subject, email.html);

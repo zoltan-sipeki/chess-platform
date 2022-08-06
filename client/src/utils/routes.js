@@ -39,8 +39,8 @@ export const ROUTE_LEADERBOARD =                                            "/ap
 export const ROUTE_PASSWORD = (pathname, search) =>                         `/api${pathname}${search}`;
 
 // -- WEBSOCKET ROUTES --
-export const ROUTE_CHAT_SERVER =                                            "ws://chessplatform.net/chat";
-export const ROUTE_CHESS_SERVER =                                           "ws://chessplatform.net/chess";
+export const ROUTE_CHAT_SERVER =                                            "chessplatform.net/chat";
+export const ROUTE_CHESS_SERVER =                                           "chessplatform.net/chess";
 
 // -- CHESS ROUTES --
 export const ROUTE_CHESS_MATCH = matchId =>                                 `/chess/matches/${matchId}`;

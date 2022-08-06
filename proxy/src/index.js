@@ -1,6 +1,9 @@
 import "./dotenv.js";
 import Express from "express";
 import HttpProxy from "http-proxy";
+import HTTP from "http";
+import HTTPS from "https";
+import FS from "fs";
 
 const app = Express();
 const proxy = HttpProxy.createProxyServer();
@@ -51,9 +54,25 @@ app.use((req, res) => {
     }
 });
 
-const server = app.listen(process.env.PROXY_PORT, () => console.log(`Proxy server listening on port ${process.env.PROXY_PORT}`));
+const http = HTTP.createServer(app);
 
-server.on("upgrade", (req, socket, head) => {
+http.on("upgrade", (req, socket, head) => {
+    setupWSConnections(req, socket, head);
+});
+
+const https = HTTPS.createServer({
+    cert: FS.readFileSync(process.env.TLS_CERT_PATH),
+    key: FS.readFileSync(process.env.TLS_KEY_PATH)
+}, app);
+
+https.on("upgrade", (req, socket, head) => {
+    setupWSConnections(req, socket, head);
+});
+
+http.listen(process.env.PROXY_PORT, () => console.log(`Proxy server listening on port ${process.env.PROXY_PORT}`));
+https.listen(process.env.PROXY_HTTPS_PORT, () => console.log(`Proxy server listening on port ${process.env.PROXY_HTTPS_PORT}`));
+
+function setupWSConnections(req, socket, head) {
     if (req.url.startsWith("/chat")) {
         proxy.ws(req, socket, head, { 
             target: { 
@@ -70,4 +89,4 @@ server.on("upgrade", (req, socket, head) => {
             } 
         });
     }
-});
+}

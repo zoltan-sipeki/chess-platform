@@ -42,7 +42,9 @@ self.addEventListener("connect", e => {
 });
 
 function createSocket() {
-    const socket = new WebSocket(ROUTE_CHESS_SERVER);
+    // eslint-disable-next-line no-restricted-globals
+    const protocol = self.location.protocol === "https:" ? "wss:" : "ws:";
+    const socket = new WebSocket(`${protocol}//${ROUTE_CHESS_SERVER}`);
     socket.addEventListener("close", closeHandler);
     socket.addEventListener("error", errorHandler);
     return socket;
