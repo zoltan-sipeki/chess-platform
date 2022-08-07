@@ -1,7 +1,7 @@
 
 # Chess Platform  
 
-This is the first "real" web application that I've ever built. I wrote it as part of my university thesis. You can check out the full application [here](http://chessplatform.net). **The site does not support HTTPS.**  
+This is the first "real" web application that I've ever built. I wrote it as part of my thesis. You can check out the full application [here](https://chessplatform.net).
 
 In the next sections I'll be giving you an overview of
 - what my goals were in making the app and what its main features are,  
@@ -76,7 +76,7 @@ The technologies I used:
 
 ## Client/server architecture  
 The architecture is illustrated by the following figure:  
-![client_server_architecture](https://user-images.githubusercontent.com/74462634/180650788-27ef8519-7744-4040-ad41-7fa35dd11545.png)
+![server_architecture766111 drawio](https://user-images.githubusercontent.com/74462634/183291608-4cd20ee9-cb1d-4ca3-81e0-f0176e7fcd3b.png)
 
 The platform is split up into the following 3 application and 2 auxiliary servers:  
 - Application servers:  
@@ -87,7 +87,7 @@ The platform is split up into the following 3 application and 2 auxiliary server
     - the frontend server (HTTP server)  
     - the file server (HTTP server)  
 
-The application servers connect to a single MariaDB and a single Redis instance. MariaDB is the main database, while Redis is used for sessions, caching and as a message broker between the application servers. (Caching at this point in development could be considered premature optimization (I haven't had the opportunity to do performance tests). Regardless, now I have an idea as to how I would do it in the future should the need arise, which means it wasn't a complete waist of time.)  
+The application servers connect to a single MariaDB and a single Redis instance. MariaDB is the main database, while Redis is used for sessions, caching and as a message broker between the application servers. (Caching at this point in development could be considered premature optimization (I haven't had the opportunity to do performance tests). Even so, now I have an idea as to how I would do it in the future should the need arise, which means it wasn't a complete waist of time.)  
 
 A reverse proxy / load balancer sits between the browser and the servers. The browser only communicates with the load balancer. Since the client is an [SPA](https://en.wikipedia.org/wiki/Single-page_application) (single page application), it uses AJAX to make HTTP requests. The data format used is JSON. The load balancer forwards incoming request to the corresponding application server based on the route prefix of the request:  
 - if the route starts with /api, the request goes to the API server,
