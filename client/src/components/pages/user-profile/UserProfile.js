@@ -68,7 +68,7 @@ export class UserProfile extends Component {
                 break;
         }
 
-        this.refreshProfile(friendId);
+        this.refreshProfile({ friendId });
     }
 
     refreshProfile(event) {
