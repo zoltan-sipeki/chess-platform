@@ -26,17 +26,19 @@ class App extends Component {
         };
 
         this.timerID = -1;
-        this.prevCookies = "";
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID);
     }
 
+    componentDidMount() {
+        this.timerID = setInterval(this.checkLoggedIn, 5000);
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loggedIn !== this.state.loggedIn) {
             if (this.state.loggedIn) {
-                this.prevCookies = document.cookie;
                 this.timerID = setInterval(this.checkLoggedIn, 5000);
             }
             else {
@@ -46,29 +48,19 @@ class App extends Component {
     }
 
     checkLoggedIn = () => {
+        console.log("checking login");
         if (!this.state.loggedIn) {
             clearInterval(this.timerID);
             return;
         }
 
-        if (this.prevCookies === document.cookie) {
-            return;
-        }
-
-        const loggedIn = getCookie("loggedIn");
-        if (loggedIn === null) {
+        if (!this.isLoggedIn()) {
             this.logout();
         }
-
-        this.prevCookies = document.cookie;
     }
 
     isLoggedIn = () => {
         const loggedIn = getCookie("loggedIn");
-        if (loggedIn === null) {
-            return false;
-        }
-
         return loggedIn === "true";
     }
 
