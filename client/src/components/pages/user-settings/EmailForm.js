@@ -36,8 +36,10 @@ export class EmailForm extends Component {
         this.props.setLoading(false);
 
         if (response.ok) {
+            const { email } = await response.json();
+            this.props.setUser({ email })
             this.props.closeModal();
-            this.props.showAlert("Before you can start using your new e-mail with this account, please verify the address by following the steps in the message we have sent to your new e-mail.", "success");
+            this.props.showAlert(<span>Your e-mail has been succesfully changed to <strong>{email}</strong></span>, "success");
         }
         else {
             const body = await response.json();

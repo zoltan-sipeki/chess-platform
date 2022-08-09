@@ -52,7 +52,7 @@ function sendVerificationEmail(req, res, next) {
     const email = changeEmailEmail(res.locals.name, req.body.email);
     sendEmail(res.locals.oldEmail, email.subject, email.html);
     
-    res.sendStatus(204);
+    res.json({ email: req.body.email });
 }
 
 export { router as default };
