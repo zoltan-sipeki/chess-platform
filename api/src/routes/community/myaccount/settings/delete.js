@@ -3,6 +3,7 @@ import Database from "../../../../database.js";
 import * as UserCache from "../../../../utils/user-cache.js";
 import { validateCurrentPassword, logOutUser, notifyFriendsOfRemoval, validateRequestBody } from "../../../middlewares.js";
 import { returnOldTagToPool } from "../../../../utils/name-tag.js";
+import { removeFile } from "../../../../utils/file.mjs";
 
 const router = Express.Router();
 
@@ -17,17 +18,21 @@ async function deleteUser(req, res, next) {
     try {
         connection = await Database.getConnection();
 
-        const [user] = await connection.query("SELECT name, tag, matchIdInProgress FROM users WHERE id = ?", [userId]);
+        const [user] = await connection.query("SELECT name, tag, avatar, matchIdInProgress FROM users WHERE id = ?", [userId]);
         if (user.matchIdInProgress) {
             res.status(409).json({ error: "You can't delete your account while a match is in progress." });
             return;
         }
-
+        
         await returnOldTagToPool(user.name, user.tag);
+        if (user.avatar !== "/avatars/default.png") {
+            await removeFile(user.avatar, true);
+        }
+
+        res.locals.friends = await UserCache.get(userId, "friends");
+        res.locals.userDeleted = true;
         await UserCache.removeFromChatrooms(userId);
         await UserCache.remove(userId);
-        res.locals.userDeleted = true;
-        res.locals.friends = await UserCache.get(userId, "friends");
 
         await connection.beginTransaction();
         await connection.query(`
@@ -53,10 +58,16 @@ async function deleteUser(req, res, next) {
         await connection.query(`
             DELETE FROM chatroom_members WHERE userId = ?;
         `, [userId]);
+        await removeEmptyChatrooms(connection);
+
+        const removedMatches = await removeMatches(connection);
+
         await connection.query(`
             DELETE FROM users WHERE id = ?;
         `, [userId]);
         await connection.commit();
+
+        await removeReplays(removedMatches);
 
         next();
     }
@@ -70,6 +81,61 @@ async function deleteUser(req, res, next) {
         if (connection) {
             await connection.end();
         }
+    }
+}
+
+async function removeEmptyChatrooms(db) {
+    try {
+        await db.query(`
+            DELETE 
+            FROM chatrooms
+            WHERE id IN (
+                SELECT id
+                FROM chatrooms c
+                LEFT OUTER JOIN chatroom_members cm ON c.id = cm.chatroomId
+                GROUP BY id
+                HAVING COUNT(chatroomId) = 0
+            )
+        `);
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
+async function removeMatches(db) {
+    try {
+        const emptyMatches = await db.query(`
+            SELECT id
+            FROM matches m
+            LEFT OUTER JOIN scoreboard s ON m.id = s.matchId
+            GROUP BY id
+            HAVING COUNT(matchId) = 0
+        `);
+
+        if (emptyMatches.length > 0) {
+            await db.query(`
+                DELETE
+                FROM matches
+                WHERE id IN (${emptyMatches.map(match => "?").join(", ")})
+            `, emptyMatches.map(match => match.id));
+        }
+        
+        return emptyMatches;
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
+async function removeReplays(matches) {
+    try {
+        if (matches.length > 0) {
+            await Promise.all(matches.map(match => removeFile(`/replays/${match.id}.json`)));
+        }
+    }
+    catch (err) {
+        throw err;
     }
 }
 

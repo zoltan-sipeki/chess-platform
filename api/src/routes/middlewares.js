@@ -129,15 +129,17 @@ export async function notifyFriendsOfRemoval(req, res, next) {
     const { sse } = req.app.locals;
 
     try {
-        for (const friendId of friends) {
-            await Promise.all([
-                UserCache.removeFriend(senderId, friendId),
-                UserCache.removeFriend(friendId, senderId)
-            ]);
-    
-            const friend = sse.get(friendId);
-            if (friend != null) {
-                friend.write(`data: ${JSON.stringify({ type: SSE.REMOVE_FRIEND, data: { friendId: senderId } })}\n\n`);
+        if (friends != null) {
+            for (const friendId of friends) {
+                await Promise.all([
+                    UserCache.removeFriend(senderId, friendId),
+                    UserCache.removeFriend(friendId, senderId)
+                ]);
+        
+                const friend = sse.get(friendId);
+                if (friend != null) {
+                    friend.write(`data: ${JSON.stringify({ type: SSE.REMOVE_FRIEND, data: { friendId: senderId } })}\n\n`);
+                }
             }
         }
         next();

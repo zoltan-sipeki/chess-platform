@@ -44,7 +44,9 @@ export async function addFriend(userId, friendId) {
 export async function removeFriend(userId, friendId) {
     try {
         const friends = await get(userId, "friends");
-        await set(userId, { friends: friends.filter(friend => friend !== friendId) });
+        if (friends != null) {
+            await set(userId, { friends: friends.filter(friend => friend !== friendId) });
+        }
     }
     catch (err) {
         throw err;
@@ -67,8 +69,10 @@ export async function addChatroom(userId, chatroomId) {
 export async function removeFromChatrooms(userId) {
     try {
         const chatrooms = await get(userId, "chatrooms");
-        for (const chatroomId of chatrooms) {
-            await Chatroom.removeMember(chatroomId, userId);
+        if (chatrooms != null) {
+            for (const chatroomId of chatrooms) {
+                await Chatroom.removeMember(chatroomId, userId);
+            }
         }
     }
     catch (err) {
