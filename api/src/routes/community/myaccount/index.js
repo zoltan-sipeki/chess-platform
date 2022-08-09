@@ -78,19 +78,11 @@ async function getMessageTabs(connection, userId) {
         return [];
     }
 
-    let condition = "";
-    for (let i = 0; i < messageTabs.length; ++i) {
-        condition += "cm.chatroomId = ?";
-        if (i + 1 < messageTabs.length) {
-            condition += " OR ";
-        }
-    }
-
     const partners = await connection.query(
-        `SELECT u.id, u.name, u.tag, u.avatar, u.status, cm.chatroomId
+        `SELECT u.id, u.name, u.tag, u.avatar, u.lastOnline, u.status, u.statusText, cm.chatroomId
          FROM users u
          INNER JOIN chatroom_members cm ON u.id = cm.userId
-         WHERE cm.userId <> ? AND ( ${condition} )`
+         WHERE cm.userId <> ? AND cm.chatroomId IN (${messageTabs.map(tab => "?").join(", ")})`
         , [userId, ...messageTabs.map(tab => tab.chatroomId)]);
 
 

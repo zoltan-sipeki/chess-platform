@@ -13,18 +13,11 @@ export async function addUserDataToQueryResult(connection, result, fieldName) {
         return result;
     }
 
-    let whereClause = "";
-    for (let i = 0; i < result.length; ++i) {
-        whereClause += "id = ?"
-        if (i + 1 < result.length) {
-            whereClause += " OR ";
-        }
-    }
-
+    const whereClause = result.map(item => "?").join(", ");
     const users = await connection.query(`
         SELECT id, name, tag, avatar
         FROM users
-        WHERE ${whereClause}
+        WHERE id IN (${whereClause})
     `, result.map(item => item[fieldName]));;
 
     for (const item of result) {
