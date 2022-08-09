@@ -99,6 +99,8 @@ class CommunityPage extends Component {
                 }
             }
 
+            localStorage.setItem(`messageTabs:${response.user.id}`, JSON.stringify(messageTabs.map(tab => tab.chatroomId )));
+
             this.setState({
                 user: response.user,
                 notifications: response.notifications,

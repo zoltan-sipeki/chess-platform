@@ -59,7 +59,12 @@ router.get("/:id/tab", validateChatRoomId, async (req, res, next) => {
         WHERE cm.userId <> ? AND cm.chatroomId = ?
     `, [req.session.userID, req.params.id]);
 
-    res.json(tab);
+    if (tab == null) {
+        res.sendStatus(404);
+    }
+    else {
+        res.json(tab);
+    }
 });
 
 async function validateChatRoomId(req, res, next) {
