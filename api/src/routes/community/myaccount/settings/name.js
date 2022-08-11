@@ -1,7 +1,7 @@
 import Express from "express";
 import Database from "../../../../database.js";
 import { validateProfileName } from "../../../../../../common/validators.mjs";
-import { generateTag, returnOldTagToPool } from "../../../../utils/name-tag.js";
+import { generateTag } from "../../../../utils/name-tag.js";
 import { notifyFriendsOfUpdate, validateRequestBody } from "../../../middlewares.js";
 import { ERROR_TOO_MANY_NAMES } from "../../../../../../common/validator-constants.mjs";
 
@@ -37,7 +37,6 @@ async function updateUserName(req, res, next) {
             return;
         }
 
-        await returnOldTagToPool(user.name, user.tag);
         await connection.query("UPDATE users SET name = ?, tag = ? WHERE id = ?", [name, tag, req.session.userID]);
 
         res.locals.changes = { name, tag };

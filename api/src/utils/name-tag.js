@@ -1,91 +1,39 @@
-import { writeFile, readFile } from "./file.mjs";
+import Database from "../database.js";
 
-const PROFILE_NAMES_FOLDER = "/profile-names";
-
-export async function hasTags(profileName) {
-    const path = `${PROFILE_NAMES_FOLDER}/${profileName.toLowerCase()}.json`;
-    let content = null;
-
-    try {
-        content = await readFile(path);
-        content = JSON.parse(content);
-
-        return content.tags.length > 0;
-    }
-    catch (err) {
-        if (err.code === 404) {
-            return true;
-        }
-        
-        throw err;    
-    }
-}
+const LOWEST_TAG = 1000;
+const HIGHEST_TAG = 9999;
+const ALL_TAGS = getAllTagsArray();
 
 export async function generateTag(profileName) {
-    const fileName = `${profileName.toLowerCase()}.json`;
-    const path = `${PROFILE_NAMES_FOLDER}/${fileName}`;
-    let content = null;
-    
-    try {
-        content = await readFile(path);
-        content = JSON.parse(content);
+    const takenTags = await Database.query({
+        rowsAsArray: true,
+        sql: `
+            SELECT tag
+            FROM users
+            WHERE name = ?
+        `
+    }, [profileName]);
+
+    let tags = new Set(ALL_TAGS);
+
+    for (const tag of takenTags) {
+        tags.delete(tag);
     }
-    catch (err) {
-        if (err.code === 404) {
-            content = generateNumbers();
-        }
-        else {
-            throw err;
-        }
-    }
-    
-    if (content.tags.length === 0) {
+
+    if (tags.size === 0) {
         return -1;
     }
-    
-    const tag = pickNumber(content.tags);
-    
-    await writeFile(path, "application/json", JSON.stringify(content));
-    
-    return tag;
+
+    tags = [...tags.values()];
+    const index = Math.floor(Math.random() * tags.length); 
+
+    return tags[index];
 }
 
-export async function returnOldTagToPool(profileName, tag) {
-    const fileName = `${profileName.toLowerCase()}.json`;
-    const path = `${PROFILE_NAMES_FOLDER}/${fileName}`;
-    
-    try {
-        let content = await readFile(path);
-        content = JSON.parse(content);
-        content.tags.push(tag);
-        await writeFile(path, "application/json", JSON.stringify(content));
+function getAllTagsArray() {
+    const result = [];
+    for (let i = LOWEST_TAG; i <= HIGHEST_TAG; ++i) {
+        result.push(i);
     }
-    catch (err) {
-        throw err;
-    }
-}
-
-function generateNumbers(group = 1000) {
-    const json = {
-        tags: []
-    }
-
-    const max = group * 10;
-    for (let i = group; i < max; ++i) {
-        json.tags.push(i);
-    }
-
-    return json;
-}
-
-function pickNumber(array) {
-    const index = Math.floor(Math.random() * array.length);
-
-    const number = array[index];
-    const last = array.length - 1;
-    array[index] = array[last];
-    array[last] = number;
-
-    array.pop();
-    return number;
+    return result;
 }

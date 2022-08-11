@@ -9,7 +9,7 @@ import { AES128Encrypt } from "../../../utils/encrypt.js";
 import * as Constants from "../../../../../common/validator-constants.mjs";
 
 import FinishSignUpRoute from "./complete.js";
-import { hasTags } from "../../../utils/name-tag.js";
+import { generateTag } from "../../../utils/name-tag.js";
 import { signUpEmail } from "../../../utils/emails.js";
 
 const router = Express.Router();
@@ -27,7 +27,7 @@ async function validateInputs(req, res, next) {
 
     errorResponse.name.error = validateProfileName(name);
     if (errorResponse.name.error !== Constants.NO_ERROR) {
-        if (!await hasTags(name)) {
+        if (await generateTag(name) === -1) {
             errorResponse.name.error = Constants.ERROR_TOO_MANY_NAMES;
         }
     }

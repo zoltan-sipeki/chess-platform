@@ -2,7 +2,6 @@ import Express from "express";
 import Database from "../../../../database.js";
 import * as UserCache from "../../../../utils/user-cache.js";
 import { validateCurrentPassword, logOutUser, notifyFriendsOfRemoval, validateRequestBody } from "../../../middlewares.js";
-import { returnOldTagToPool } from "../../../../utils/name-tag.js";
 import { removeFile } from "../../../../utils/file.mjs";
 
 const router = Express.Router();
@@ -24,7 +23,6 @@ async function deleteUser(req, res, next) {
             return;
         }
         
-        await returnOldTagToPool(user.name, user.tag);
         if (user.avatar !== "/avatars/default.png") {
             await removeFile(user.avatar, true);
         }
