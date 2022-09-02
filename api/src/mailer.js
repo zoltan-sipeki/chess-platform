@@ -10,8 +10,8 @@ const mailer = Nodemailer.createTransport({
     secure: false
 });
 
-export function sendEmail(to, subject, html) {
-    mailer.sendMail({
+export async function sendEmail(to, subject, html) {
+    await mailer.sendMail({
         from: process.env.SMTP_FROM,
         to,
         subject,

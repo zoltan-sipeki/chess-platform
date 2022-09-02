@@ -48,11 +48,16 @@ async function updatEmail(req, res, next) {
     }
 }
 
-function sendVerificationEmail(req, res, next) {        
-    const email = changeEmailEmail(res.locals.name, req.body.email);
-    sendEmail(res.locals.oldEmail, email.subject, email.html);
-    
-    res.json({ email: req.body.email });
+async function sendVerificationEmail(req, res, next) {   
+    try {
+        const email = changeEmailEmail(res.locals.name, req.body.email);
+        await sendEmail(res.locals.oldEmail, email.subject, email.html);
+        
+        res.json({ email: req.body.email });
+    }     
+    catch (err) {
+        next(err);
+    }
 }
 
 export { router as default };

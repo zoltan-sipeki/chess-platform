@@ -34,7 +34,7 @@ async function sendPasswordResetLink(req, res, next) {
         const link = `${req.protocol}://${process.env.PROXY_HOST}/auth/reset-password?id=${res.locals.payload.id}&token=${token}`;
 
         const email = forgotPasswordEmail(res.locals.name, link);
-        sendEmail(req.body.email, email.subject, email.html);
+        await sendEmail(req.body.email, email.subject, email.html);
 
         res.sendStatus(204);
     }

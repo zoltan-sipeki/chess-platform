@@ -61,7 +61,7 @@ async function sendVerificationEmail(req, res, next) {
         const link = `${req.protocol}://${process.env.PROXY_HOST}/auth/sign-up/complete?token=${token}`;
         
         const email = signUpEmail(req.body.name, link);
-        sendEmail(req.body.email, email.subject, email.html);
+        await sendEmail(req.body.email, email.subject, email.html);
 
         res.sendStatus(204);
     }

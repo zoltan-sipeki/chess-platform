@@ -36,10 +36,15 @@ async function updatePassword(req, res, next) {
     }
 }
 
-function sendVerificationEmail(req, res, next) {
-    const email = changePasswordEmail(res.locals.name);
-    sendEmail(res.locals.email, email.subject, email.html);
-    
-    res.sendStatus(204);
+async function sendVerificationEmail(req, res, next) {
+    try {
+        const email = changePasswordEmail(res.locals.name);
+        await sendEmail(res.locals.email, email.subject, email.html);
+        
+        res.sendStatus(204);
+    }
+    catch (err) {
+        next(err);
+    }
 }
 export { router as default };
