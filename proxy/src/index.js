@@ -7,7 +7,9 @@ import FS from "fs";
 import Helmet from "helmet";
 
 const app = Express();
-const proxy = HttpProxy.createProxyServer();
+const proxy = HttpProxy.createProxyServer({
+    xfwd: true
+});
 
 proxy.on("error", err => {
     console.error(err);

@@ -5,6 +5,7 @@ import Routes from "./routes/index.js";
 const app = Express();
 
 app.disable("x-powered-by");
+app.set("trust proxy", true);
 
 app.locals.sse = new Map();
 

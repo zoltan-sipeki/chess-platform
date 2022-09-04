@@ -10,6 +10,7 @@ const app = Express();
 const appWS = ExpressWS(app);
 
 app.disable("x-powered-by");
+app.set("trust proxy", true);
 
 app.use((req, res, next) => {
     req.url = req.url.replace(/^\/chess$|^\/chess\//, "/");
