@@ -41,8 +41,12 @@ const YEAR = Object.freeze({
 const times = [YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND];
 
 export function toAgoString(pastTime) {
-    const today = new Date().getTime();
-    const diff = today - pastTime.getTime();
+    const now = new Date();
+    let diff = now.getTime() - pastTime.getTime();
+
+    if (diff < 0) {
+        diff = 0;
+    }
 
     for (const time of times) {
         const quotient = Math.floor(diff / time.ms);
@@ -62,8 +66,12 @@ export function toAgoString(pastTime) {
 }
 
 export function timeElapsedSince(pastTime) {
-    const today = new Date().getTime();
-    const diff = today - pastTime.getTime();
+    const now = new Date();
+    let diff = now.getTime() - pastTime.getTime();
+
+    if (diff < 0) {
+        diff = 0;
+    }
 
     for (const time of times) {
         const quotient = Math.floor(diff / time.ms);

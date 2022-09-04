@@ -107,7 +107,10 @@ async function onDisconnect(socket) {
             const change = { lastOnline, status: STATUS.US_OFFLINE };
             await user.set(change);
             user.update();
-            notifyFriends(user, change);
+            const defaultStatus = await user.get("defaultStatus");
+            if (defaultStatus !== STATUS.US_OFFLINE) {
+                notifyFriends(user, change);
+            }
             users.delete(user.id);
         }
     }

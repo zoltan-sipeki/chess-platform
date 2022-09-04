@@ -48,7 +48,6 @@ class App extends Component {
     }
 
     checkLoggedIn = () => {
-        console.log("checking login");
         if (!this.state.loggedIn) {
             clearInterval(this.timerID);
             return;
